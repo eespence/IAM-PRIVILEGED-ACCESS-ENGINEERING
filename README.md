@@ -188,32 +188,16 @@ The PAM implementation is designed to mitigate:
 
 ## 📚 Module Breakdown
 
-### Module 01 — Privileged Identity Architecture
-Defines identity segmentation, privileged account structure, and separation of duties.
 
-### Module 02 — Tiered Administration Model
-Implements tiered access controls to prevent privilege escalation across Tier 0 / Tier 1 / Tier 2.
-
-### Module 03 — Administrative Workstation Model
-Establishes MGMT01 as the sole authorized administrative origin (Privileged Access Workstation).
-
-### Module 04 — Privileged Credential Vault (HashiCorp Vault)
-Deploys Vault as the centralized secret management system with policy-based access and audit logging.
-
-### Module 05 — Privileged Access Monitoring and Auditing
-Integrates Vault audit logs into Splunk for detection, alerting, and privileged activity visibility.
-
-### Module 06 — Delinea Secret Server Deployment and Integration
-Introduces a full enterprise PAM platform with RBAC, session governance, and centralized credential management.
-
-### Module 07 — IAM PAM Monitoring and Incident Detection
-Implements detection rules, alert logic, and incident response workflows for privileged access anomalies.
-
-### Module 08 — IAM Automation and Policy Enforcement
-Deploys automation scripts and enforces PAM policy controls across the environment.
-
-### Module 09 — IAM Architecture Validation
-Validates the end-to-end PAM architecture through structured access control testing and enforcement verification.
+- [Module 01 — Privileged Identity Architecture](./module/01-privileged-identity-architecture.md)
+- [Module 02 — Tiered Administration Model](./module/02-tiered-administration-model.md)
+- [Module 03 — Administrative Workstation Model](./module/03-administrative-workstation-model.md)
+- [Module 04 — Privileged Credential Vault (HashiCorp Vault)](./module/04-privileged-credential-vault.md)
+- [Module 05 — Privileged Access Monitoring and Auditing](./module/05-privileged-access-monitoring.md)
+- [Module 06 — Delinea Secret Server Deployment and Integration](./module/06-delinea-secret-server.md)
+- [Module 07 — IAM PAM Monitoring and Incident Detection](./module/07-iam-pam-monitoring-incident-detection.md)
+- [Module 08 — IAM Automation and Policy Enforcement](./module/08-iam-automation-policy-enforcement.md)
+- [Module 09 — IAM Architecture Validation](./module/09-iam-architecture-validation.md)
 
 ---
 
