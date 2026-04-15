@@ -1,0 +1,282 @@
+# 🔐 IAM-PRIVILEGED-ACCESS-ENGINEERING
+
+![HashiCorp Vault](https://img.shields.io/badge/HashiCorp_Vault-1.16-black?style=flat\&logo=vault\&logoColor=white)
+![Delinea](https://img.shields.io/badge/Delinea-Secret_Server-5A2CA0?style=flat)
+![Active Directory](https://img.shields.io/badge/Active_Directory-0078D4?style=flat\&logo=microsoft\&logoColor=white)
+![Splunk](https://img.shields.io/badge/Splunk-000000?style=flat\&logo=splunk\&logoColor=white)
+![Zero Trust](https://img.shields.io/badge/Zero_Trust-Aligned-blue?style=flat)
+
+9-module enterprise PAM lab extending hybrid identity with HashiCorp Vault and Delinea Secret Server,
+tiered administration, and privileged access monitoring.
+Built on top of HYBRID-IDENTITY-ACCESS-MGMT — credentials vaulted,
+access controlled, every action audited.
+
+🔗 **Companion Repository:**
+[HYBRID-IDENTITY-ACCESS-MGMT](../HYBRID-IDENTITY-ACCESS-MGMT)
+
+---
+
+## 🧠 Overview
+
+This repository documents an enterprise-grade Privileged Access Management lab built as a direct extension of the existing hybrid identity platform in **HYBRID-IDENTITY-ACCESS-MGMT**.
+
+This is not just a configuration lab.
+
+During this build, access control enforcement failed, GPO restrictions broke legitimate admin paths, and the built-in Administrator account resisted every enforcement attempt — all of which had to be diagnosed and resolved using real PAM engineering principles.
+
+The lab environment, **IAMPAM.LAB**, simulates PAM architectures used in regulated enterprise environments including financial services, defense, and critical infrastructure.
+
+---
+
+## 🔍 What This Lab Demonstrates
+
+• Privileged identity segmentation and tiered administration  
+• Controlled administrative access paths via Privileged Access Workstation (PAW)  
+• HashiCorp Vault — API-driven secrets management and audit logging  
+• Delinea Secret Server — enterprise PAM platform with RBAC and session governance  
+• GPO-based access control enforcement (WHO + WHERE model)  
+• Privileged access monitoring and incident detection via Splunk  
+• Identity automation and PAM policy enforcement  
+• End-to-end PAM architecture validation
+
+---
+
+## 🏗️ Architecture Overview — IAMPAM.LAB
+
+```mermaid
+graph LR
+    CLIENT01[CLIENT01\nUntrusted Endpoint] -- BLOCKED --> DC01[DC01\nDomain Controller\nTier 0]
+    MGMT01[MGMT01\nPrivileged Access Workstation] -- ALLOWED --> DC01
+    MGMT01 --> PAMVAULT01[PAMVAULT01\nHashiCorp Vault]
+    MGMT01 --> DELINEA01[DELINEA01\nDelinea Secret Server]
+    DC01 --> SIEM01[SIEM01\nSplunk SIEM]
+    PAMVAULT01 --> SIEM01
+    DELINEA01 --> SIEM01
+```
+
+**Network Range:** `172.31.100.0/24`
+
+The architecture enforces a **controlled identity plane + privileged access plane model**:
+
+* Identity services remain centralized (DC01, Entra ID)
+* Administrative access is restricted through a designated PAW (MGMT01)
+* Privileged credentials are externalized into vault systems (PAMVAULT01, DELINEA01)
+* All privileged activity is forwarded to centralized security telemetry (SIEM01)
+
+---
+
+## 🔥 Key Engineering Incidents
+
+### 1. Built-in Administrator Cannot Be Restricted
+
+**Problem:**
+Initial enforcement testing used `IAMPAM\Administrator`.
+CLIENT01 → RDP → DC01 using Administrator = **SUCCESS** (should be blocked)
+
+**Root Cause:**
+Built-in Administrator is protected by AdminSDHolder (`adminCount=1`).
+The "Log On To" workstation restriction cannot be applied to this account.
+GPO alone does not enforce *where* a login originates.
+
+**Fix Implemented:**
+```
+Dedicated Tier 0 account (adm.dc01) created
+GPO → Allow log on through RDS → adm.dc01 ONLY
+AD → Log On To → MGMT01 ONLY
+WHO control + WHERE control = enforced access path
+```
+
+**Result:**
+CLIENT01 → DC01 using adm.dc01 = **ACCESS DENIED**  
+MGMT01 → DC01 using adm.dc01 = **SUCCESS**
+
+---
+
+### 2. GPO Deny Policy Caused Global Lockout
+
+**Problem:**
+Attempting to deny Domain Users / Domain Admins via GPO to block CLIENT01
+broke all legitimate admin access — including MGMT01.
+
+**Root Cause:**
+Deny overrides Allow. Broad group-based deny policies are indiscriminate
+and cannot distinguish access origin.
+
+**Fix:**
+Abandoned broad deny model. Implemented allow-only model scoped
+to a named Tier 0 account combined with workstation-level Log On To restriction.
+
+---
+
+## 🖥️ Systems Inventory
+
+| System Name | Role                                    | OS                  | IP Address    |
+| ----------- | --------------------------------------- | ------------------- | ------------- |
+| DC01        | Domain Controller                       | Windows Server 2022 | 172.31.100.10 |
+| MGMT01      | Administrative Workstation (PAW)        | Windows Server 2022 | 172.31.100.20 |
+| CLIENT01    | Standard User Workstation               | Windows 11          | 172.31.100.30 |
+| LINUX01     | Privileged Linux Server                 | Ubuntu 22.04.4 LTS  | 172.31.100.40 |
+| ID-SYNC01   | Entra Connect Sync Server               | Windows Server 2022 | 172.31.100.25 |
+| SIEM01      | Security Monitoring (Splunk Enterprise) | Ubuntu 22.04.4 LTS  | 172.31.100.60 |
+| PAMVAULT01  | HashiCorp Vault (Credential Vault)      | Ubuntu 22.04.4 LTS  | 172.31.100.70 |
+| DELINEA01   | Delinea Secret Server (Enterprise PAM)  | Windows Server 2022 | 172.31.100.80 |
+
+---
+
+## 🔑 PAM Platforms in This Lab
+
+### PAMVAULT01 — HashiCorp Vault
+
+Implements a **lightweight, API-driven secrets engine**:
+
+* Secure credential storage
+* Policy-based access control
+* CLI/API-driven operations
+* JSON audit logging
+* Integration with automation pipelines
+
+---
+
+### DELINEA01 — Delinea Secret Server
+
+Implements a **full enterprise PAM control plane**:
+
+* Centralized credential vaulting with UI
+* Role-based access control (RBAC)
+* Privileged session governance
+* Audit logging and reporting
+* Scalable enterprise PAM architecture
+
+---
+
+### Why Both?
+
+This lab demonstrates **two tiers of PAM maturity**:
+
+| Platform | Purpose                                 |
+| -------- | --------------------------------------- |
+| Vault    | Engineering-driven secret management    |
+| Delinea  | Enterprise PAM platform with governance |
+
+This shows the ability to operate across both DevSecOps and enterprise security environments.
+
+---
+
+## 🛡️ Privileged Access Management Design Goals
+
+* **Credential Isolation** — Privileged credentials are never stored on endpoints or embedded in scripts
+* **Controlled Administrative Access Paths** — Administrative actions must originate from hardened systems
+* **Tiered Privilege Enforcement** — Administrative roles are segmented based on system sensitivity
+* **Centralized Secret Management** — All privileged credentials stored and accessed through vault platforms
+* **Auditability and Traceability** — All privileged actions generate verifiable logs
+* **Elimination of Standing Privilege** — Persistent elevated access is minimized and controlled
+
+---
+
+## ⚠️ Security Threat Model
+
+The PAM implementation is designed to mitigate:
+
+* Credential dumping from compromised endpoints
+* Lateral movement using privileged credentials
+* Pass-the-Hash and Pass-the-Ticket attacks
+* Unauthorized administrative access from unmanaged systems
+* Insider misuse of privileged accounts
+* Persistence through credential reuse
+
+---
+
+## 📚 Module Breakdown
+
+### Module 01 — Privileged Identity Architecture
+Defines identity segmentation, privileged account structure, and separation of duties.
+
+### Module 02 — Tiered Administration Model
+Implements tiered access controls to prevent privilege escalation across Tier 0 / Tier 1 / Tier 2.
+
+### Module 03 — Administrative Workstation Model
+Establishes MGMT01 as the sole authorized administrative origin (Privileged Access Workstation).
+
+### Module 04 — Privileged Credential Vault (HashiCorp Vault)
+Deploys Vault as the centralized secret management system with policy-based access and audit logging.
+
+### Module 05 — Privileged Access Monitoring and Auditing
+Integrates Vault audit logs into Splunk for detection, alerting, and privileged activity visibility.
+
+### Module 06 — Delinea Secret Server Deployment and Integration
+Introduces a full enterprise PAM platform with RBAC, session governance, and centralized credential management.
+
+### Module 07 — IAM PAM Monitoring and Incident Detection
+Implements detection rules, alert logic, and incident response workflows for privileged access anomalies.
+
+### Module 08 — IAM Automation and Policy Enforcement
+Deploys automation scripts and enforces PAM policy controls across the environment.
+
+### Module 09 — IAM Architecture Validation
+Validates the end-to-end PAM architecture through structured access control testing and enforcement verification.
+
+---
+
+## 📁 Repository Structure
+
+```
+IAM-PRIVILEGED-ACCESS-ENGINEERING/
+│
+├── README.md
+│
+├── architecture/
+│   ├── iampam-pam-architecture.png
+│   ├── pam-architecture.md
+│   ├── pam-threat-model.md
+│   ├── privilege-boundaries.md
+│   └── tiered-admin-model.md
+│
+├── automation/
+│   └── splunk_alert_action_logger.py
+│
+├── grc/
+│   └── grc-framework-mapping-pam.md
+│
+├── module/
+│   ├── 01-privileged-identity-architecture.md
+│   ├── 02-tiered-administration-model.md
+│   ├── 03-administrative-workstation-model.md
+│   ├── 04-privileged-credential-vault.md
+│   ├── 05-privileged-access-monitoring.md
+│   ├── 06-delinea-secret-server.md
+│   ├── 07-iam-pam-monitoring-incident-detection.md
+│   ├── 08-iam-automation-policy-enforcement.md
+│   └── 09-iam-architecture-validation.md
+│
+├── runbook/
+│   ├── delinea-secret-server-installation.md
+│   ├── sql-express-deployment.md
+│   └── windows-iis-prerequisites.md
+│
+└── screenshot/
+```
+
+---
+
+## ✅ Final Summary
+
+The **IAM-PRIVILEGED-ACCESS-ENGINEERING** repository demonstrates a complete, enterprise-aligned implementation of Privileged Access Management within an existing hybrid identity environment.
+
+This lab validates the ability to:
+
+* Engineer secure privileged access pathways
+* Design and enforce tiered administrative models
+* Deploy and operate multiple PAM platforms (Vault + Delinea)
+* Integrate privileged activity into centralized monitoring systems
+* Align identity security controls with enterprise threat models
+
+The resulting architecture reflects real-world PAM design patterns and provides a portfolio-ready demonstration of:
+
+**Privileged Access Management engineering capability at an enterprise level.**
+
+---
+
+**Author:** Edward E. Spence  
+**Environment:** IAMPAM.LAB  
+
+[LinkedIn](https://linkedin.com/in/edward-e-spence-6598bb312) | [Portfolio](https://edwards-it-portfolio.com)
