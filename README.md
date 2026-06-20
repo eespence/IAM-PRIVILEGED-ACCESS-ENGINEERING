@@ -1,13 +1,29 @@
-# 🔐 IAM-PRIVILEGED-ACCESS-ENGINEERING
-![HashiCorp Vault](https://img.shields.io/badge/HashiCorp_Vault-1.16-black?style=flat&logo=vault&logoColor=white)
-![Delinea](https://img.shields.io/badge/Delinea-Secret_Server-5A2CA0?style=flat)
-![JumpServer](https://img.shields.io/badge/JumpServer-Community_Edition-green?style=flat)
-![Active Directory](https://img.shields.io/badge/Active_Directory-0078D4?style=flat&logo=microsoft&logoColor=white)
-![Splunk](https://img.shields.io/badge/Splunk-000000?style=flat&logo=splunk&logoColor=white)
-![Zero Trust](https://img.shields.io/badge/Zero_Trust-Aligned-blue?style=flat)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/eespence/HYBRID-IDENTITY-ACCESS-MGMT/main/branding/FM-Horizontal-Cropped.png" width="650">
+</p>
 
+<h1 align="center">Privileged Access Engineering Lab</h1>
 
-10-module enterprise PAM lab extending hybrid identity through HashiCorp Vault, Delinea Secret Server, JumpServer Community Edition, tiered administration, privileged session governance, and centralized PAM monitoring.
+<p align="center">
+  <strong>Enterprise Privileged Access Management | IAMPAM.LAB</strong>
+</p>
+
+<p align="center">
+  <em>Fairmont Manufacturing — Precision. Security. Mission Success.</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/HashiCorp_Vault-1.16-black?style=flat&logo=vault&logoColor=white">
+  <img src="https://img.shields.io/badge/Delinea-Secret_Server-5A2CA0?style=flat">
+  <img src="https://img.shields.io/badge/JumpServer-Community_Edition-green?style=flat">
+  <img src="https://img.shields.io/badge/Active_Directory-0078D4?style=flat&logo=microsoft&logoColor=white">
+  <img src="https://img.shields.io/badge/Splunk-000000?style=flat&logo=splunk&logoColor=white">
+  <img src="https://img.shields.io/badge/Zero_Trust-Aligned-blue?style=flat">
+</p>
+
+---
+
+10-module enterprise PAM lab extending hybrid identity through HashiCorp Vault, Delinea Secret Server, JumpServer Community Edition, tiered administration, privileged session governance, and centralized PAM operations.
 
 🔗 **Companion Repository:**
 [HYBRID-IDENTITY-ACCESS-MGMT](../HYBRID-IDENTITY-ACCESS-MGMT)
