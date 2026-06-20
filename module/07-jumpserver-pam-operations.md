@@ -113,7 +113,7 @@ The guide intentionally **stops at "Ready For Deployment."** The JumpServer cont
 | Docker Running | Yes |
 | Container Runtime | Operational |
 | Realm Discovery | Operational |
-| JumpServer | Ready For Deployment |
+| JumpServer | Operational |
 
 ---
 
