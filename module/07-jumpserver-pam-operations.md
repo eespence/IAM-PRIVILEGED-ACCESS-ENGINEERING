@@ -768,7 +768,7 @@ echo "Realm discover:  $(realm discover iampam.lab >/dev/null 2>&1 && echo OK ||
 | Docker running | Yes (`active`) |
 | Container runtime | Operational |
 | Realm discovery | Operational |
-| JumpServer | Operational |
+| JumpServer | Ready for Deployment |
 
 When every row passes, **Module 07 is complete** and `JUMPSERVER01` is *Ready For Deployment*.
 
