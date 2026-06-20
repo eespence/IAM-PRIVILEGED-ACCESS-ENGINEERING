@@ -757,18 +757,18 @@ echo "Realm discover:  $(realm discover iampam.lab >/dev/null 2>&1 && echo OK ||
 
 > At the close of Module 07 the build-phase network is still in effect: `ens18` is static with **no** default route, and the temporary `ens19` supplies the **single** active default route. There must be exactly **one** default route (`Default routes: 1`). The staging interface is removed only after JumpServer is deployed (out of scope here).
 
-| Item | Expected | Pass |
-|---|---|---|
-| Hostname | `jumpserver01` | ☐ |
-| Domain | `iampam.lab` | ☐ |
-| Internal IP (`ens18`) | `172.31.100.85` | ☐ |
-| Single active default route | Exactly 1 (via `ens19`) | ☐ |
-| Domain Controller reachable | `172.31.100.10` | ☐ |
-| Docker installed | Yes | ☐ |
-| Docker running | Yes (`active`) | ☐ |
-| Container runtime | Operational | ☐ |
-| Realm discovery | Operational | ☐ |
-| JumpServer | Ready For Deployment | ☐ |
+| Item | Expected State |
+|---|---|
+| Hostname | `jumpserver01` |
+| Domain | `iampam.lab` |
+| Internal IP (`ens18`) | `172.31.100.85` |
+| Internal PAM Network | `172.31.100.0/24` |
+| Domain Controller reachable | `172.31.100.10` |
+| Docker installed | Yes |
+| Docker running | Yes (`active`) |
+| Container runtime | Operational |
+| Realm discovery | Operational |
+| JumpServer | Operational |
 
 When every row passes, **Module 07 is complete** and `JUMPSERVER01` is *Ready For Deployment*.
 
