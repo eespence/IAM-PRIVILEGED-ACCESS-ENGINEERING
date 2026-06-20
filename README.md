@@ -43,19 +43,24 @@ The lab environment, **IAMPAM.LAB**, simulates PAM architectures used in regulat
 ## 🏗️ Architecture Overview — IAMPAM.LAB
 
 ```mermaid
-graph LR
+
+   graph LR
     CLIENT01[CLIENT01\nUntrusted Endpoint] -- BLOCKED --> DC01[DC01\nDomain Controller\nTier 0]
 
     MGMT01[MGMT01\nPrivileged Access Workstation] -- ALLOWED --> DC01
-    MGMT01 --> JUMPSERVER01[JUMPSERVER01\nPAM Bastion Host\n172.31.100.85]
+    MGMT01 --> JUMPSERVER01[JUMPSERVER01\nJumpServer PAM Gateway\n172.31.100.85]
 
-    JUMPSERVER01 --> LINUX01[LINUX01\nPrivileged Linux Server]
-    JUMPSERVER01 --> PAMVAULT01[PAMVAULT01\nHashiCorp Vault]
-    JUMPSERVER01 --> DELINEA01[DELINEA01\nDelinea Secret Server]
+    JUMPSERVER01 --> LINUX01[LINUX01\nManaged Linux Asset]
+    JUMPSERVER01 --> RHEL01[RHEL01\nManaged Linux Asset]
+    JUMPSERVER01 --> RHELAPP01[RHELAPP01\nManaged Application Server]
+
+    MGMT01 --> PAMVAULT01[PAMVAULT01\nHashiCorp Vault]
+    MGMT01 --> DELINEA01[DELINEA01\nDelinea Secret Server]
 
     DC01 --> SIEM01[SIEM01\nSplunk SIEM]
     LINUX01 --> SIEM01
-    JUMPSERVER01 --> SIEM01
+    RHEL01 --> SIEM01
+    RHELAPP01 --> SIEM01
     PAMVAULT01 --> SIEM01
     DELINEA01 --> SIEM01
 ```
@@ -161,21 +166,20 @@ Implemented capabilities:
 
 Note: Advanced capabilities such as automated password rotation, privileged session management, session recording, discovery services, and other licensed enterprise features were not implemented within this lab environment.
 
-
 ---
 
-### Why Both?
+## PAM Architecture Components
 
-This lab demonstrates **three tiers of PAM maturity**:
+This lab demonstrates multiple layers of modern Privileged Access Management (PAM), with each platform serving a distinct role within the overall architecture.
 
 | Platform | Purpose |
 |----------|---------|
 | Vault | Engineering-driven secrets management |
-| Delinea | Enterprise credential governance  |
-| Jumpserver | Privileged session management and access brokering |
+| Delinea | Enterprise credential governance |
+| JumpServer | Privileged session management and access brokering |
 
 
-This demonstrates the ability to design, deploy, and operate multiple PAM technologies supporting enterprise identity and security operations.
+Together, these platforms demonstrate secret management, credential governance, privileged session control, auditing, and administrative access enforcement within the IAMPAM.LAB environment.
 
 ---
 
