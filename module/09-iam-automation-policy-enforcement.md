@@ -4,9 +4,9 @@
 ![HashiCorp\_Vault](https://img.shields.io/badge/HashiCorp_Vault-Audit_Log-black?style=flat\&logo=vault\&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-Automation-3776AB?style=flat\&logo=python\&logoColor=white)
 
-# Module 08: IAM Automation & Policy Enforcement
+# Module 09: IAM Automation & Policy Enforcement
 
-**Module**: 08 - IAM Automation & Policy Enforcement
+**Module**: 09 - IAM Automation & Policy Enforcement
 **Status**: ✅ COMPLETE (Alert-Driven Automation & Policy Enforcement Validated)
 **Built by**: Edward E. Spence
 **Completed**: March 2026
@@ -59,7 +59,7 @@ Vault → Splunk Detection → Alert → Script Execution → Log Output
 sudo find / -maxdepth 3 -type d -name splunk 2>/dev/null
 ```
 
-![Install Path](../screenshot/module-08/module08-01-splunk-install-path.png)
+![Install Path](../screenshot/module-09/module09-01-splunk-install-path.png)
 
 ---
 
@@ -69,7 +69,7 @@ sudo find / -maxdepth 3 -type d -name splunk 2>/dev/null
 ls -l /opt/splunk/bin | grep scripts
 ```
 
-![Scripts Directory](../screenshot/module-08/module08-02-splunk-scripts-directory.png)
+![Scripts Directory](../screenshot/module-09/module09-02-splunk-scripts-directory.png)
 
 ---
 
@@ -130,7 +130,7 @@ sudo python3 /opt/splunk/bin/scripts/alert_handler.py
 sudo cat /opt/splunk/var/log/splunk/iam_alert_log.txt
 ```
 
-![Script Execution](../screenshot/module-08/module08-03-script-execution-validation.png)
+![Script Execution](../screenshot/module-09/module09-03-script-execution-validation.png)
 
 ---
 
@@ -150,7 +150,7 @@ index=wineventlog EventCode=4625 host=DELINEA01
 * Validate script execution from alert context
 * Establish baseline detection capability
 
-![Failed Login Alert](../screenshot/module-08/module08-04-failed-login-alert-configured.png)
+![Failed Login Alert](../screenshot/module-09/module09-04-failed-login-alert-configured.png)
 
 ---
 
@@ -160,7 +160,7 @@ index=wineventlog EventCode=4625 host=DELINEA01
 index=vault | table _time host request.path | sort - _time
 ```
 
-![Vault Events](../screenshot/module-08/module08-05-vault-events-visible.png)
+![Vault Events](../screenshot/module-09/module09-05-vault-events-visible.png)
 
 ---
 
@@ -172,7 +172,7 @@ index=vault request.path="*db-creds*"
 | sort - _time
 ```
 
-![Vault Detection](../screenshot/module-08/module08-06-vault-detection-query.png)
+![Vault Detection](../screenshot/module-09/module09-06-vault-detection-query.png)
 
 ---
 
@@ -186,7 +186,7 @@ Alert created:
 * Action: Run a script
 * Script: `alert_handler.py`
 
-![Automation Alert](../screenshot/module-08/module08-07-vault-automation-alert-created.png)
+![Automation Alert](../screenshot/module-09/module09-07-vault-automation-alert-created.png)
 
 ---
 
@@ -201,7 +201,7 @@ Observed:
 * FAILED_LOGIN entries (baseline scheduled alert execution)
 * VAULT_ACCESS entry (automation validation)
 
-![Execution Proof](../screenshot/module-08/module08-08-alert-script-execution-proof.png)
+![Execution Proof](../screenshot/module-09/module09-08-alert-script-execution-proof.png)
 
 ---
 

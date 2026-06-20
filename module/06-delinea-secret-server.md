@@ -168,6 +168,30 @@ The system is ready for:
 
 ---
 
+## Architecture Note – Community Edition Lab Constraints
+
+This lab intentionally combines multiple PAM technologies to demonstrate enterprise privileged access management concepts within a home-lab environment.
+
+During development, Delinea Secret Server Community/Lab capabilities did not provide all of the session management features required to demonstrate:
+
+- Session brokering
+- Session recording
+- Session replay
+- Command auditing
+
+To address these limitations while preserving PAM architectural principles, JumpServer Community Edition was later integrated into the environment as a dedicated privileged session management platform.
+
+As a result:
+
+- Delinea Secret Server serves as the privileged credential management platform
+- HashiCorp Vault serves as the privileged credential vault
+- JumpServer serves as the privileged session management platform
+- Splunk Enterprise provides centralized monitoring and audit visibility
+
+This approach allows the lab to demonstrate enterprise PAM concepts that are commonly implemented through commercial platforms such as CyberArk, Delinea, BeyondTrust, and other privileged access management solutions while remaining achievable within a community-supported lab environment.
+
+---
+
 ## 11. Troubleshooting
 
 ### Issue: IIS Prerequisite Failures

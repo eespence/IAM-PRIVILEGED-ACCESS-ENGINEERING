@@ -5,9 +5,9 @@
 ![Windows\_Server](https://img.shields.io/badge/Windows_Server-2022-0078D4?style=flat\&logo=microsoft\&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu_22.04-E95420?style=flat\&logo=ubuntu\&logoColor=white)
 
-# Module 07: IAM & PAM Monitoring / Incident Detection
+# Module 08: IAM & PAM Monitoring / Incident Detection
 
-**Module**: 07 - IAM & PAM Monitoring / Incident Detection
+**Module**: 08 - IAM & PAM Monitoring / Incident Detection
 **Status**: ✅ COMPLETE (Cross-Platform Monitoring & Detection Validated)
 **Built by**: Edward E. Spence
 **Completed**: March 2026
@@ -61,7 +61,7 @@ DELINEA01 → UF → SIEM01 → index=wineventlog + index=iis
 sudo ss -tulnp | grep 9997
 ```
 
-![Receiver](../screenshot/module-07/module07-01-splunk-receiver-verified.png)
+![Receiver](../screenshot/module-08/module08-01-splunk-receiver-verified.png)
 
 ---
 
@@ -71,7 +71,7 @@ sudo ss -tulnp | grep 9997
 Test-NetConnection 172.31.100.60 -Port 9997
 ```
 
-![Connectivity](../screenshot/module-07/module07-03-connectivity-to-siem.png)
+![Connectivity](../screenshot/module-08/module08-03-connectivity-to-siem.png)
 
 ---
 
@@ -95,7 +95,7 @@ True
 Copy-Item "C:\Software\Splunk\splunkforwarder.msi" "\\DELINEA01\C$\Temp\"
 ```
 
-![Transfer](../screenshot/module-07/module07-04-uf-transfer.png)
+![Transfer](../screenshot/module-08/module08-04-uf-transfer.png)
 
 ---
 
@@ -108,7 +108,7 @@ AGREETOLICENSE=Yes `
 /quiet
 ```
 
-![Installed](../screenshot/module-07/module07-05-uf-installed.png)
+![Installed](../screenshot/module-08/module08-05-uf-installed.png)
 
 ---
 
@@ -130,7 +130,7 @@ Restart:
 Restart-Service SplunkForwarder
 ```
 
-![Forwarder](../screenshot/module-07/module07-06-forwarder-configuration.png)
+![Forwarder](../screenshot/module-08/module08-06-forwarder-configuration.png)
 
 ---
 
@@ -157,8 +157,8 @@ Restart:
 Restart-Service SplunkForwarder
 ```
 
-![Windows](../screenshot/module-07/module07-07-windows-events.png)
-![IIS](../screenshot/module-07/module07-08-iis-logs.png)
+![Windows](../screenshot/module-08/module08-07-windows-events.png)
+![IIS](../screenshot/module-08/module08-08-iis-logs.png)
 
 ---
 
@@ -176,7 +176,7 @@ index=iis host=DELINEA01 | stats count by source
 (index=vault OR index=wineventlog OR index=iis) | stats count by index
 ```
 
-![Cross Validation](../screenshot/module-07/module07-10-cross-platform-validation.png)
+![Cross Validation](../screenshot/module-08/module08-10-cross-platform-validation.png)
 
 ---
 
@@ -253,7 +253,7 @@ index=iis host=DELINEA01 "/SecretServer/"
 | table _time cs_method cs_uri_stem sc_status c_ip cs_username
 ```
 
-![Parsing](../screenshot/module-07/module07-09-iis-parsing-validation.png)
+![Parsing](../screenshot/module-08/module08-09-iis-parsing-validation.png)
 
 ---
 

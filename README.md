@@ -1,15 +1,13 @@
 # 🔐 IAM-PRIVILEGED-ACCESS-ENGINEERING
-
-![HashiCorp Vault](https://img.shields.io/badge/HashiCorp_Vault-1.16-black?style=flat\&logo=vault\&logoColor=white)
+![HashiCorp Vault](https://img.shields.io/badge/HashiCorp_Vault-1.16-black?style=flat&logo=vault&logoColor=white)
 ![Delinea](https://img.shields.io/badge/Delinea-Secret_Server-5A2CA0?style=flat)
-![Active Directory](https://img.shields.io/badge/Active_Directory-0078D4?style=flat\&logo=microsoft\&logoColor=white)
-![Splunk](https://img.shields.io/badge/Splunk-000000?style=flat\&logo=splunk\&logoColor=white)
+![JumpServer](https://img.shields.io/badge/JumpServer-Community_Edition-green?style=flat)
+![Active Directory](https://img.shields.io/badge/Active_Directory-0078D4?style=flat&logo=microsoft&logoColor=white)
+![Splunk](https://img.shields.io/badge/Splunk-000000?style=flat&logo=splunk&logoColor=white)
 ![Zero Trust](https://img.shields.io/badge/Zero_Trust-Aligned-blue?style=flat)
 
-9-module enterprise PAM lab extending hybrid identity with HashiCorp Vault and Delinea Secret Server,
-tiered administration, and privileged access monitoring.
-Built on top of HYBRID-IDENTITY-ACCESS-MGMT — credentials vaulted,
-access controlled, every action audited.
+
+10-module enterprise PAM lab extending hybrid identity through HashiCorp Vault, Delinea Secret Server, JumpServer Community Edition, tiered administration, privileged session governance, and centralized PAM monitoring.
 
 🔗 **Companion Repository:**
 [HYBRID-IDENTITY-ACCESS-MGMT](../HYBRID-IDENTITY-ACCESS-MGMT)
@@ -33,7 +31,8 @@ The lab environment, **IAMPAM.LAB**, simulates PAM architectures used in regulat
 • Privileged identity segmentation and tiered administration  
 • Controlled administrative access paths via Privileged Access Workstation (PAW)  
 • HashiCorp Vault — API-driven secrets management and audit logging  
-• Delinea Secret Server — enterprise PAM platform with RBAC and session governance  
+• Delinea Secret Server — enterprise PAM platform with credential vaulting, RBAC, and privileged access administration 
+• JumpServer Community Edition — privileged session brokering, session replay, command auditing, and authorization policy enforcement
 • GPO-based access control enforcement (WHO + WHERE model)  
 • Privileged access monitoring and incident detection via Splunk  
 • Identity automation and PAM policy enforcement  
@@ -46,13 +45,21 @@ The lab environment, **IAMPAM.LAB**, simulates PAM architectures used in regulat
 ```mermaid
 graph LR
     CLIENT01[CLIENT01\nUntrusted Endpoint] -- BLOCKED --> DC01[DC01\nDomain Controller\nTier 0]
+
     MGMT01[MGMT01\nPrivileged Access Workstation] -- ALLOWED --> DC01
-    MGMT01 --> PAMVAULT01[PAMVAULT01\nHashiCorp Vault]
-    MGMT01 --> DELINEA01[DELINEA01\nDelinea Secret Server]
+    MGMT01 --> JUMPSERVER01[JUMPSERVER01\nPAM Bastion Host\n172.31.100.85]
+
+    JUMPSERVER01 --> LINUX01[LINUX01\nPrivileged Linux Server]
+    JUMPSERVER01 --> PAMVAULT01[PAMVAULT01\nHashiCorp Vault]
+    JUMPSERVER01 --> DELINEA01[DELINEA01\nDelinea Secret Server]
+
     DC01 --> SIEM01[SIEM01\nSplunk SIEM]
+    LINUX01 --> SIEM01
+    JUMPSERVER01 --> SIEM01
     PAMVAULT01 --> SIEM01
     DELINEA01 --> SIEM01
 ```
+
 
 **Network Range:** `172.31.100.0/24`
 
@@ -110,16 +117,18 @@ to a named Tier 0 account combined with workstation-level Log On To restriction.
 
 ## 🖥️ Systems Inventory
 
-| System Name | Role                                    | OS                  | IP Address    |
-| ----------- | --------------------------------------- | ------------------- | ------------- |
-| DC01        | Domain Controller                       | Windows Server 2022 | 172.31.100.10 |
-| MGMT01      | Administrative Workstation (PAW)        | Windows Server 2022 | 172.31.100.20 |
-| CLIENT01    | Standard User Workstation               | Windows 11          | 172.31.100.30 |
-| LINUX01     | Privileged Linux Server                 | Ubuntu 22.04.4 LTS  | 172.31.100.40 |
-| ID-SYNC01   | Entra Connect Sync Server               | Windows Server 2022 | 172.31.100.25 |
-| SIEM01      | Security Monitoring (Splunk Enterprise) | Ubuntu 22.04.4 LTS  | 172.31.100.60 |
-| PAMVAULT01  | HashiCorp Vault (Credential Vault)      | Ubuntu 22.04.4 LTS  | 172.31.100.70 |
-| DELINEA01   | Delinea Secret Server (Enterprise PAM)  | Windows Server 2022 | 172.31.100.80 |
+| System Name  | Role                                         | OS                        | IP Address    |
+| ------------ | -------------------------------------------- | ------------------------- | ------------- |
+| DC01         | Domain Controller                            | Windows Server 2022       | 172.31.100.10 |
+| MGMT01       | Privileged Access Workstation (PAW)          | Windows Server 2022       | 172.31.100.20 |
+| ID-SYNC01    | Entra Connect Sync Server                    | Windows Server 2022       | 172.31.100.25 |
+| CLIENT01     | Standard User Workstation                    | Windows 11                | 172.31.100.30 |
+| LINUX01      | Privileged Linux Server                      | Ubuntu 22.04.4 LTS        | 172.31.100.40 |
+| SIEM01       | Security Monitoring (Splunk Enterprise)      | Ubuntu 22.04.4 LTS        | 172.31.100.60 |
+| PAMVAULT01   | HashiCorp Vault Credential Platform          | Ubuntu 22.04.4 LTS        | 172.31.100.70 |
+| DELINEA01    | Delinea Secret Server                        | Windows Server 2022       | 172.31.100.80 |
+| JUMPSERVER01 | PAM Bastion Host / Privileged Access Gateway | Ubuntu Server 22.04.4 LTS | 172.31.100.85 |
+
 
 ---
 
@@ -137,28 +146,36 @@ Implements a **lightweight, API-driven secrets engine**:
 
 ---
 
-### DELINEA01 — Delinea Secret Server
+## DELINEA01 — Delinea Secret Server
 
-Implements a **full enterprise PAM control plane**:
+Enterprise Privileged Access Management (PAM) platform deployed within IAMPAM.LAB to support credential security and privileged access administration.
 
-* Centralized credential vaulting with UI
+Implemented capabilities:
+
+* Centralized credential vaulting through a web-based interface
 * Role-based access control (RBAC)
-* Privileged session governance
+* Secret and credential management workflows
+* Administrative policy configuration
 * Audit logging and reporting
-* Scalable enterprise PAM architecture
+* Enterprise PAM architecture integration
+
+Note: Advanced capabilities such as automated password rotation, privileged session management, session recording, discovery services, and other licensed enterprise features were not implemented within this lab environment.
+
 
 ---
 
 ### Why Both?
 
-This lab demonstrates **two tiers of PAM maturity**:
+This lab demonstrates **three tiers of PAM maturity**:
 
-| Platform | Purpose                                 |
-| -------- | --------------------------------------- |
-| Vault    | Engineering-driven secret management    |
-| Delinea  | Enterprise PAM platform with governance |
+| Platform | Purpose |
+|----------|---------|
+| Vault | Engineering-driven secrets management |
+| Delinea | Enterprise credential governance  |
+| Jumpserver | Privileged session management and access brokering |
 
-This shows the ability to operate across both DevSecOps and enterprise security environments.
+
+This demonstrates the ability to design, deploy, and operate multiple PAM technologies supporting enterprise identity and security operations.
 
 ---
 
@@ -188,16 +205,17 @@ The PAM implementation is designed to mitigate:
 
 ## 📚 Module Breakdown
 
+* [Module 01 — Privileged Identity Architecture](./module/01-privileged-identity-architecture.md)
+* [Module 02 — Tiered Administration Model](./module/02-tiered-administration-model.md)
+* [Module 03 — Administrative Workstation Model](./module/03-administrative-workstation-model.md)
+* [Module 04 — Privileged Credential Vault (HashiCorp Vault)](./module/04-privileged-credential-vault.md)
+* [Module 05 — Privileged Access Monitoring and Auditing](./module/05-privileged-access-monitoring.md)
+* [Module 06 — Delinea Secret Server Deployment and Integration](./module/06-delinea-secret-server.md)
+* [Module 07 — JumpServer PAM Operations](./module/07-jumpserver-pam-operations.md)
+* [Module 08 — IAM PAM Monitoring and Incident Detection](./module/08-iam-pam-monitoring-incident-detection.md)
+* [Module 09 — IAM Automation and Policy Enforcement](./module/09-iam-automation-policy-enforcement.md)
+* [Module 10 — IAM Architecture Validation](./module/10-iam-architecture-validation.md)
 
-- [Module 01 — Privileged Identity Architecture](./module/01-privileged-identity-architecture.md)
-- [Module 02 — Tiered Administration Model](./module/02-tiered-administration-model.md)
-- [Module 03 — Administrative Workstation Model](./module/03-administrative-workstation-model.md)
-- [Module 04 — Privileged Credential Vault (HashiCorp Vault)](./module/04-privileged-credential-vault.md)
-- [Module 05 — Privileged Access Monitoring and Auditing](./module/05-privileged-access-monitoring.md)
-- [Module 06 — Delinea Secret Server Deployment and Integration](./module/06-delinea-secret-server.md)
-- [Module 07 — IAM PAM Monitoring and Incident Detection](./module/07-iam-pam-monitoring-incident-detection.md)
-- [Module 08 — IAM Automation and Policy Enforcement](./module/08-iam-automation-policy-enforcement.md)
-- [Module 09 — IAM Architecture Validation](./module/09-iam-architecture-validation.md)
 
 ---
 
@@ -228,9 +246,10 @@ IAM-PRIVILEGED-ACCESS-ENGINEERING/
 │   ├── 04-privileged-credential-vault.md
 │   ├── 05-privileged-access-monitoring.md
 │   ├── 06-delinea-secret-server.md
-│   ├── 07-iam-pam-monitoring-incident-detection.md
-│   ├── 08-iam-automation-policy-enforcement.md
-│   └── 09-iam-architecture-validation.md
+│   ├── 07-jumpserver-pam-operations.md
+│   ├── 08-iam-pam-monitoring-incident-detection.md
+│   ├── 09-iam-automation-policy-enforcement.md
+│   └── 10-iam-architecture-validation.md
 │
 ├── runbook/
 │   ├── delinea-secret-server-installation.md
@@ -250,7 +269,7 @@ This lab validates the ability to:
 
 * Engineer secure privileged access pathways
 * Design and enforce tiered administrative models
-* Deploy and operate multiple PAM platforms (Vault + Delinea)
+* Deploy and operate multiple PAM platforms (Vault + Delinea + JumpServer)
 * Integrate privileged activity into centralized monitoring systems
 * Align identity security controls with enterprise threat models
 

@@ -8,6 +8,8 @@ Privileged credential management requires more than just storing passwords — i
 
 Delinea Secret Server was deployed on DELINEA01 using IIS as the web host and SQL Server Express as the backend database — mirroring real enterprise PAM deployments and providing a fully operational credential governance platform.
 
+Delinea Secret Server provides credential governance and privileged credential storage within the IAMPAM.LAB environment. Administrative session brokering and controlled access pathways are addressed separately through the JumpServer privileged access architecture.
+
 ---
 
 ## What Was Built

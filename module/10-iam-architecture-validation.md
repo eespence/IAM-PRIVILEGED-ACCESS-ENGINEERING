@@ -6,9 +6,9 @@
 ![HashiCorp\_Vault](https://img.shields.io/badge/HashiCorp_Vault-Audit_Log-black?style=flat\&logo=vault\&logoColor=white)
 
 
-# Module 09 — Identity Security Architecture & Validation
+# Module 10 — Identity Security Architecture & Validation
 
-**Module**: 09 - Identity Security Architecture & Validation  
+**Module**: 10 - Identity Security Architecture & Validation  
 **Status**: ✅ COMPLETE (Tier-Based Access Control and IAM/PAM Architecture Validation Confirmed)  
 **Built by**: Edward E. Spence  
 **Completed**: March 2026  
@@ -38,7 +38,7 @@ The environment consists of:
 
 ## 3. Architecture Diagram
 
-![Architecture](../architecture/iampam-pam-architecture.png)
+![Architecture](../architecture/iampam-enterprise-pam-architecture.png)
 
 This diagram represents identity authentication paths, PAM access flows, centralized logging ingestion, and automation integration within the IAM/PAM lab.
 
@@ -200,7 +200,7 @@ This section validates enforcement of tier-based administrative access using Gro
 
 **Result:** ❌ Denied
 
-![Tier 2 Denied](../screenshot/module-09/module09-01-tier2-to-tier0-rdp-denied.png)
+![Tier 2 Denied](../screenshot/module-10/module10-01-tier2-to-tier0-rdp-denied.png)
 
 ---
 
@@ -212,7 +212,7 @@ This section validates enforcement of tier-based administrative access using Gro
 
 **Result:** ❌ Denied
 
-![Tier 1 Denied](../screenshot/module-09/module09-02-tier1-to-tier0-rdp-denied.png)
+![Tier 1 Denied](../screenshot/module-10/module10-02-tier1-to-tier0-rdp-denied.png)
 
 ---
 
@@ -228,7 +228,7 @@ whoami
 
 **Result:** ✅ Successful
 
-![Tier 0 Success](../screenshot/module-09/module09-03-tier0-to-tier0-access-success.png)
+![Tier 0 Success](../screenshot/module-10/module10-03-tier0-to-tier0-access-success.png)
 
 ---
 
