@@ -10,7 +10,7 @@ This module deploys JumpServer Community Edition within the IAMPAM.LAB environme
 
 JumpServer was deployed on JUMPSERVER01 using a containerized Docker architecture integrated with Active Directory authentication and managed Linux assets.
 
-![JumpServer Web Portal](images/module07-19-jumpserver-web-portal-access.png)
+![JumpServer Web Portal Access](../screenshot/module-07/module07-19-jumpserver-web-portal-access.png)
 
 *JumpServer Community Edition administrative portal deployed and operational within the IAMPAM.LAB environment.*
 
